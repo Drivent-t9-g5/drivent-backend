@@ -31,10 +31,20 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
 
   const hotel = await hotelRepository.findRoomsByHotelId(hotelId);
 
-  if (!hotel || hotel.Rooms.length === 0) {
+  if (!hotel) {
     throw notFoundError();
   }
-  return hotel;
+  const rooms = hotel.Rooms.map((room) => {
+    const bookedCount = room.Booking?.length || 0;
+    const availableCount = room.capacity - bookedCount;
+    return {
+      id: room.id,
+      name: room.name,
+      available: availableCount,
+      reserved: bookedCount,
+    };
+  });
+  return rooms;
 }
 
 export default {

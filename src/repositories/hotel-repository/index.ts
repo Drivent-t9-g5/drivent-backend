@@ -67,12 +67,23 @@ function formatRoomTypes(types: any) {
 }
 
 async function findRoomsByHotelId(hotelId: number) {
-  return prisma.hotel.findFirst({
+  return await prisma.hotel.findFirst({
     where: {
       id: hotelId,
     },
     include: {
-      Rooms: true,
+      Rooms: {
+        select: {
+          id: true,
+          name: true,
+          capacity: true,
+          Booking: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
     },
   });
 }

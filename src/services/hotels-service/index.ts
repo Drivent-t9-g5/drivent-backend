@@ -1,20 +1,21 @@
 import hotelRepository from '@/repositories/hotel-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
-import { notFoundError } from '@/errors';
+import { notFoundError, unauthorizedError } from '@/errors';
 import ticketsRepository from '@/repositories/tickets-repository';
 import { cannotListHotelsError } from '@/errors/cannot-list-hotels-error';
+import { badRequestError } from '@/errors/bad-request-error';
 
 async function listHotels(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) {
-    throw notFoundError();
+    throw badRequestError();
   }
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket || ticket.status === 'RESERVED') {
-    throw notFoundError();
+    throw unauthorizedError();
   }
   if (ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
-    throw cannotListHotelsError();
+    throw notFoundError();
   }
 }
 

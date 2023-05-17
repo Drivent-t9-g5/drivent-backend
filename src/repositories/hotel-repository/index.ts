@@ -50,6 +50,15 @@ async function findHotels() {
   return formattedHotels;
 }
 
+async function findHotelById(hotelId: number) {
+  const hotel = await prisma.hotel.findFirst({
+    where: {
+      id: hotelId,
+    },
+  });
+  return hotel;
+}
+
 function formatRoomTypes(types: any) {
   const typeNames = [];
 
@@ -90,6 +99,7 @@ async function findRoomsByHotelId(hotelId: number) {
 
 const hotelRepository = {
   findHotels,
+  findHotelById,
   findRoomsByHotelId,
 };
 

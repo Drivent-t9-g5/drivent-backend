@@ -1,4 +1,4 @@
-import { notFoundError } from '@/errors';
+import { conflictError, notFoundError, unauthorizedError } from '@/errors';
 import { badRequestError } from '@/errors/bad-request-error';
 import { cannotBookingError } from '@/errors/cannot-booking-error';
 import bookingRepository from '@/repositories/booking-repository';
@@ -37,7 +37,8 @@ async function bookingRoomById(userId: number, roomId: number) {
 
   await checkEnrollmentTicket(userId);
   await checkValidBooking(roomId);
-
+  const hasBook = await bookingRepository.findByUserId(userId);
+  if (hasBook) throw conflictError('user alredy has room');
   return bookingRepository.create({ roomId, userId });
 }
 

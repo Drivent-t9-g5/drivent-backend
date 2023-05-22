@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Activitie" ALTER COLUMN "date" SET DATA TYPE DATE;
+
+-- AlterTable
+ALTER TABLE "Event" ALTER COLUMN "startsAt" SET DATA TYPE DATE,
+ALTER COLUMN "endsAt" SET DATA TYPE DATE;

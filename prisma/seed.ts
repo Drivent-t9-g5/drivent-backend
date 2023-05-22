@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Auditorium, PrismaClient } from '@prisma/client';
 import dayjs from 'dayjs';
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ async function main() {
         logoImageUrl: 'https://files.driveneducation.com.br/images/logo-rounded.png',
         backgroundImageUrl: 'linear-gradient(to right, #FA4098, #FFD77F)',
         startsAt: dayjs().toDate(),
-        endsAt: dayjs().add(21, 'days').toDate(),
+        endsAt: dayjs().add(2, 'days').toDate(),
       },
     });
   }
@@ -126,6 +126,207 @@ async function main() {
         name: '103',
         capacity: 3,
         hotelId: thirdHotel.id,
+      },
+    });
+  }
+
+  let firstAuditorium = await prisma.auditorium.findFirst();
+  let secondAuditorium;
+  let thirdAuditorium;
+  if (!firstAuditorium) {
+    firstAuditorium = await prisma.auditorium.create({
+      data: {
+        name: 'Auditório Principal',
+      },
+    });
+    secondAuditorium = await prisma.auditorium.create({
+      data: {
+        name: 'Auditório Lateral',
+      },
+    });
+    thirdAuditorium = await prisma.auditorium.create({
+      data: {
+        name: 'Sala de Workshop',
+      },
+    });
+  }
+
+  let activitie = await prisma.activitie.findFirst();
+  if (!activitie) {
+    activitie = await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'Minecraft: montando o PC ideal',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T10:00:00Z',
+        capacity: 20,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'LoL: montando o PC ideal',
+        startTime: '2023-01-01T10:00:00Z',
+        endTime: '2023-01-01T11:00:00Z',
+        capacity: 20,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'Elden Ring: montando o PC ideal',
+        startTime: '2023-01-01T11:00:00Z',
+        endTime: '2023-01-01T12:00:00Z',
+        capacity: 20,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: secondAuditorium.id,
+        eventId: event.id,
+        name: 'Minecraft: como jogar',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T11:00:00Z',
+        capacity: 15,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: thirdAuditorium.id,
+        eventId: event.id,
+        name: 'Minecraft: gameplay',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T10:00:00Z',
+        capacity: 10,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: thirdAuditorium.id,
+        eventId: event.id,
+        name: 'LoL: gameplay',
+        startTime: '2023-01-01T10:00:00Z',
+        endTime: '2023-01-01T11:00:00Z',
+        capacity: 10,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: thirdAuditorium.id,
+        eventId: event.id,
+        name: 'Elden Ring: gameplay',
+        startTime: '2023-01-01T11:00:00Z',
+        endTime: '2023-01-01T12:00:00Z',
+        capacity: 1,
+        date: dayjs().toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'Minecraft: montando o PC ideal',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T10:00:00Z',
+        capacity: 20,
+        date: dayjs().add(1, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'LoL: montando o PC ideal',
+        startTime: '2023-01-01T10:00:00Z',
+        endTime: '2023-01-01T11:00:00Z',
+        capacity: 20,
+        date: dayjs().add(1, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'Elden Ring: montando o PC ideal',
+        startTime: '2023-01-01T11:00:00Z',
+        endTime: '2023-01-01T12:00:00Z',
+        capacity: 20,
+        date: dayjs().add(1, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: secondAuditorium.id,
+        eventId: event.id,
+        name: 'Minecraft: como jogar',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T11:00:00Z',
+        capacity: 15,
+        date: dayjs().add(1, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: secondAuditorium.id,
+        eventId: event.id,
+        name: 'Dota: como jogar',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T10:00:00Z',
+        capacity: 10,
+        date: dayjs().add(1, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: thirdAuditorium.id,
+        eventId: event.id,
+        name: 'Elden Ring: gameplay',
+        startTime: '2023-01-01T11:00:00Z',
+        endTime: '2023-01-01T12:00:00Z',
+        capacity: 1,
+        date: dayjs().add(1, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: firstAuditorium.id,
+        eventId: event.id,
+        name: 'Dark Souls: montando o PC ideal',
+        startTime: '2023-01-01T11:00:00Z',
+        endTime: '2023-01-01T12:00:00Z',
+        capacity: 20,
+        date: dayjs().add(2, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: secondAuditorium.id,
+        eventId: event.id,
+        name: 'Dark Souls: como jogar',
+        startTime: '2023-01-01T09:00:00Z',
+        endTime: '2023-01-01T11:00:00Z',
+        capacity: 15,
+        date: dayjs().add(2, 'days').toDate(),
+      },
+    });
+    await prisma.activitie.create({
+      data: {
+        auditoriumId: thirdAuditorium.id,
+        eventId: event.id,
+        name: 'Dark Souls: gameplay',
+        startTime: '2023-01-01T11:00:00Z',
+        endTime: '2023-01-01T12:00:00Z',
+        capacity: 1,
+        date: dayjs().add(2, 'days').toDate(),
       },
     });
   }

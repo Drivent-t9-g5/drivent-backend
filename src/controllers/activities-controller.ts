@@ -27,3 +27,35 @@ export async function getActivitiesByDay(
     next(e);
   }
 }
+
+export async function getSubscriptionsByUserId(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<Response> {
+  const { userId } = req;
+
+  try {
+    const subscriptions = await activitiesService.getSubscriptionsByUserId(userId);
+    return res.status(200).send(subscriptions);
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function postSubscription(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<Response> {
+  const { userId } = req;
+  const { activitieId, newCapacity } = req.body as Record<string, number>;
+
+  try {
+    await activitiesService.postSubscription(userId, activitieId, newCapacity);
+    return res.sendStatus(201);
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
+}

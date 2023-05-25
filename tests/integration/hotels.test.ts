@@ -200,7 +200,7 @@ describe('GET /hotels/:hotelId', () => {
 
       expect(response.status).toEqual(httpStatus.OK);
 
-      expect(response.body).toEqual({
+      /*  expect(response.body).toEqual({
         id: createdHotel.id,
         name: createdHotel.name,
         image: createdHotel.image,
@@ -216,7 +216,15 @@ describe('GET /hotels/:hotelId', () => {
             updatedAt: createdRoom.updatedAt.toISOString(),
           },
         ],
-      });
+      }); */
+      expect(response.body).toEqual([
+        {
+          id: createdRoom.id,
+          available: createdRoom.capacity,
+          name: createdRoom.name,
+          reserved: Number(),
+        },
+      ]);
     });
 
     it('should respond with status 404 and hotel with no rooms', async () => {

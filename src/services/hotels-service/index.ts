@@ -41,7 +41,7 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
 
   const hotel = await hotelRepository.findRoomsByHotelId(hotelId);
 
-  if (!hotel) {
+  if (!hotel || hotel.Rooms.length === 0) {
     throw notFoundError();
   }
   const rooms = hotel.Rooms.map((room) => {

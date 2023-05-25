@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  email      String       @unique @db.VarChar(255)
-  password   String       @db.VarChar(255)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Session    Session[]
-  Enrollment Enrollment[]
-  Booking    Booking[]
+  id           Int            @id @default(autoincrement())
+  email        String         @unique @db.VarChar(255)
+  password     String         @db.VarChar(255)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Session      Session[]
+  Enrollment   Enrollment[]
+  Booking      Booking[]
+  Subscription Subscription[]
 }
 
 model Session {
@@ -35,8 +36,8 @@ model Event {
   title              String      @db.VarChar(255)
   backgroundImageUrl String      @db.VarChar(255)
   logoImageUrl       String      @db.VarChar(255)
-  startsAt           DateTime @db.Date
-  endsAt             DateTime @db.Date
+  startsAt           DateTime    @db.Date
+  endsAt             DateTime    @db.Date
   Activitie          Activitie[]
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
@@ -152,14 +153,23 @@ model Auditorium {
 }
 
 model Activitie {
-  id           Int        @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   auditoriumId Int
   eventId      Int
   name         String
-  startTime    DateTime   @db.Time
-  endTime      DateTime   @db.Time
+  startTime    DateTime       @db.Time
+  endTime      DateTime       @db.Time
   capacity     Int
-  date         DateTime @db.Date
-  auditorium   Auditorium @relation(fields: [auditoriumId], references: [id], onDelete: Cascade)
-  event        Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  date         DateTime       @db.Date
+  auditorium   Auditorium     @relation(fields: [auditoriumId], references: [id], onDelete: Cascade)
+  event        Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  Subscription Subscription[]
+}
+
+model Subscription {
+  id          Int       @id @default(autoincrement())
+  activitieId Int
+  Activitie   Activitie @relation(fields: [activitieId], references: [id], onDelete: Cascade)
+  userId      Int
+  User        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

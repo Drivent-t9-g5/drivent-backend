@@ -1,3 +1,4 @@
+import { Activitie, Subscription } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findActivities() {
@@ -16,10 +17,21 @@ async function findActivitiesByDate(eventId: number, date: string) {
   });
 }
 
-async function findSubscriptionsByUserId(userId: number) {
+async function findActivitieById(id: number) {
+  return prisma.activitie.findFirst({
+    where: {
+      id,
+    },
+  });
+}
+
+async function findSubscriptionsByUserId(userId: number): Promise<(Subscription & { Activitie: Activitie })[]> {
   return prisma.subscription.findMany({
     where: {
       userId,
+    },
+    include: {
+      Activitie: true,
     },
   });
 }
@@ -47,6 +59,7 @@ async function decreaseCapacity(activitieId: number, newCapacity: number) {
 const activitiesRepository = {
   findActivities,
   findActivitiesByDate,
+  findActivitieById,
   findSubscriptionsByUserId,
   createSubscription,
   decreaseCapacity,

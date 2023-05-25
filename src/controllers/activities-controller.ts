@@ -7,7 +7,6 @@ export async function getActivities(req: AuthenticatedRequest, res: Response, ne
     const activities = await activitiesService.getActivities();
     return res.status(200).send(activities);
   } catch (e) {
-    console.log(e);
     next(e);
   }
 }
@@ -23,7 +22,6 @@ export async function getActivitiesByDay(
     const activities = await activitiesService.getActivitiesByDay(eventId, date);
     return res.status(200).send(activities);
   } catch (e) {
-    console.log(e);
     next(e);
   }
 }
@@ -55,7 +53,6 @@ export async function postSubscription(
     await activitiesService.postSubscription(userId, activitieId, newCapacity);
     return res.sendStatus(201);
   } catch (e) {
-    console.log(e);
     next(e);
   }
 }

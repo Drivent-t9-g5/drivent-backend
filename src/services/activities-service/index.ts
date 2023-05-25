@@ -1,3 +1,4 @@
+import { conflictError } from '@/errors';
 import activitiesRepository from '@/repositories/activities-repository';
 
 async function getActivities() {
@@ -16,6 +17,30 @@ async function getSubscriptionsByUserId(userId: number) {
 }
 
 async function postSubscription(userId: number, activitieId: number, newCapacity: number) {
+  const activitie = await activitiesRepository.findActivitieById(activitieId);
+  const subscriptions = await activitiesRepository.findSubscriptionsByUserId(userId);
+
+  if (activitie && subscriptions.length !== 0) {
+    for (let i = 0; i < subscriptions.length; i++) {
+      const currentActivitieDate = new Date(subscriptions[i].Activitie.date);
+      const currentActivitieStartTime = new Date(subscriptions[i].Activitie.startTime);
+      const currentActivitieEndTime = new Date(subscriptions[i].Activitie.endTime);
+      const newActivitieDate = new Date(activitie.date);
+      const newActivitieStartTime = new Date(activitie.startTime);
+      const newActivitieEndTime = new Date(activitie.endTime);
+      const sameDate =
+        currentActivitieDate.toISOString().substring(0, 10) === newActivitieDate.toISOString().substring(0, 10);
+
+      if (
+        sameDate &&
+        currentActivitieStartTime < newActivitieEndTime &&
+        currentActivitieEndTime > newActivitieStartTime
+      ) {
+        throw conflictError('Horários das atividades coincidem');
+      }
+    }
+  }
+
   await activitiesRepository.decreaseCapacity(activitieId, newCapacity);
 
   const subscription = await activitiesRepository.createSubscription(userId, activitieId);

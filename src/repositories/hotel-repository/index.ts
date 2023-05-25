@@ -44,6 +44,8 @@ async function findHotels() {
       disponible: availableCount,
       rooms: formattedRooms,
       types: typesNames,
+      createdAt: hotel.createdAt,
+      updatedAt: hotel.updatedAt,
     };
   });
 

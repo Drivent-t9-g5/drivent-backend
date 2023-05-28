@@ -13,6 +13,11 @@ export function handleApplicationErrors(
       message: err.message,
     });
   }
+  if (err.name === 'CannotAccessActivities') {
+    return res.status(httpStatus.UNAUTHORIZED).send({
+      message: err.message,
+    });
+  }
 
   if (err.name === 'ConflictError' || err.name === 'DuplicatedEmailError') {
     return res.status(httpStatus.CONFLICT).send({

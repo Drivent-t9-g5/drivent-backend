@@ -1,9 +1,21 @@
-import { conflictError } from '@/errors';
+import { conflictError, cannotActivitiesError } from '@/errors';
 import activitiesRepository from '@/repositories/activities-repository';
+import enrollmentRepository from '@/repositories/enrollment-repository';
+import ticketsRepository from '@/repositories/tickets-repository';
 
 async function getActivities() {
   const activities = await activitiesRepository.findActivities();
   return activities;
+}
+async function isPermitedAcessActivities(userId: number) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) {
+    throw cannotActivitiesError('You have to enroll first and buy a ticket to see activities!');
+  }
+  const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
+  if (!ticket || ticket.status === 'RESERVED') {
+    throw cannotActivitiesError('It is necessary to buy a ticket to see activities!');
+  }
 }
 
 async function getActivitiesByDay(eventId: number, date: string) {
@@ -52,4 +64,5 @@ export default {
   getActivitiesByDay,
   getSubscriptionsByUserId,
   postSubscription,
+  isPermitedAcessActivities,
 };

@@ -2,7 +2,6 @@ import hotelRepository from '@/repositories/hotel-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import { notFoundError, unauthorizedError } from '@/errors';
 import ticketsRepository from '@/repositories/tickets-repository';
-import { cannotListHotelsError } from '@/errors/cannot-list-hotels-error';
 import { badRequestError } from '@/errors/bad-request-error';
 
 async function listHotels(userId: number) {

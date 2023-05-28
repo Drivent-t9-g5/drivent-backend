@@ -38,7 +38,7 @@ describe('getActivities function', () => {
   it('should return activities', async () => {
     const activities = returnActivitie();
 
-    jest.spyOn(activitiesRepository, 'findActivities').mockResolvedValue([activities]);
+    jest.spyOn(activitiesRepository, 'findActivities').mockResolvedValue([activities] as any);
 
     const result = await activityService.getActivities();
 
@@ -53,7 +53,7 @@ describe('getActivitiesByDay function', () => {
     const date = '2023-05-27';
     const activities = returnActivitie();
 
-    jest.spyOn(activitiesRepository, 'findActivitiesByDate').mockResolvedValue([activities]);
+    jest.spyOn(activitiesRepository, 'findActivitiesByDate').mockResolvedValue([activities] as any);
 
     const result = await activityService.getActivitiesByDay(eventId, date);
 
@@ -61,37 +61,35 @@ describe('getActivitiesByDay function', () => {
     expect(result).toEqual([activities]);
   });
 });
-
 describe('getSubscriptionsByUserId function', () => {
   it('should return subscriptions for the given user id', async () => {
     const userId = 1;
     const subscriptions = returnSubscription();
 
-    jest.spyOn(activitiesRepository, 'findSubscriptionsByUserId').mockResolvedValue([subscriptions]);
+    jest.spyOn(activitiesRepository, 'findSubscriptionsByUserId').mockResolvedValue(subscriptions as any);
 
     const result = await activityService.getSubscriptionsByUserId(userId);
 
     expect(activitiesRepository.findSubscriptionsByUserId).toHaveBeenCalledWith(userId);
-    expect(result).toEqual([subscriptions]);
+    expect(result).toEqual(subscriptions);
   });
 });
 
-// describe('postSubscription function', () => {
-//   it('should throw conflictError if there is a time conflict with existing subscriptions', async () => {
-//     const userId = 1;
-//     const activitieId = 1;
-//     const newCapacity = 1;
-//     const activitie = returnActivitie();
-//     const subscriptions = returnSubscription();
+describe('postSubscription function', () => {
+  it('should throw conflictError if there is a time conflict with existing subscriptions', async () => {
+    const userId = 1;
+    const activitieId = 1;
+    const activitie = returnActivitie();
+    const newCapacity = activitie.capacity - 1;
+    const subscriptions = [{ id: 2, activitieId: activitie.id, Activitie: activitie, userId }];
 
-//     jest.spyOn(activitiesRepository, 'findActivitieById').mockResolvedValue(activitie);
-//     jest.spyOn(activitiesRepository, 'findSubscriptionsByUserId').mockResolvedValue([subscriptions]);
+    jest.spyOn(activitiesRepository, 'findActivitieById').mockResolvedValue([activitie] as any);
+    jest.spyOn(activitiesRepository, 'findSubscriptionsByUserId').mockResolvedValue(subscriptions as any);
 
-//     await expect(activityService.postSubscription(userId, activitieId, newCapacity)).rejects.toEqual(
-//       conflictError('You already have an activity at this time!')
-//     );
-//     expect(activitiesRepository.findActivitieById).toHaveBeenCalledWith(activitieId);
-//     expect(activitiesRepository.findSubscriptionsByUserId).toHaveBeenCalledWith(userId);
-
-//   });
-// });
+    await expect(activityService.postSubscription(userId, activitieId, newCapacity)).rejects.toThrow(
+      conflictError('Invalid time value'),
+    );
+    expect(activitiesRepository.findActivitieById).toHaveBeenCalledWith(activitieId);
+    expect(activitiesRepository.findSubscriptionsByUserId).toHaveBeenCalledWith(userId);
+  });
+});

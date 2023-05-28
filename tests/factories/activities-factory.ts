@@ -42,7 +42,7 @@ export function returnActivitie() {
     startTime: faker.date.future(),
     endTime: faker.date.future(),
     capacity: faker.datatype.number(),
-    date: faker.date.future(),
+    date: dayjs().toDate(),
   };
 }
 export function returnUser() {
@@ -59,8 +59,7 @@ export function returnSubscription() {
   return {
     id: faker.datatype.number(),
     activitieId: faker.datatype.number(),
-    Activitie: returnActivitie(),
+    Activitie: [returnActivitie()],
     userId: faker.datatype.number(),
-    User: returnUser(),
   };
 }

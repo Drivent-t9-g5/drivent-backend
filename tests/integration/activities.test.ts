@@ -306,5 +306,23 @@ describe('POST /activitie/subscriptions', () => {
 
       expect(response.status).toEqual(httpStatus.UNAUTHORIZED);
     });
+    it('should respond with status 200 when user can see subscriptions of activities', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketTypeWithHotel();
+      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const payment = await createPayment(ticket.id, ticketType.price);
+      const activitie = await createActivitie();
+      const response = await supertest(app)
+        .post('/activitie/subscriptions')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          activitieId: activitie.activitie.id,
+          newCapacity: activitie.activitie.capacity - 1,
+        });
+
+      expect(response.status).toEqual(httpStatus.CREATED);
+    });
   });
 });

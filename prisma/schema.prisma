@@ -162,4 +162,6 @@ model Activitie {
   date         DateTime @db.Date
   auditorium   Auditorium @relation(fields: [auditoriumId], references: [id], onDelete: Cascade)
   event        Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([date])
 }

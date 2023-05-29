@@ -7,7 +7,8 @@ import { badRequestError } from '@/errors/bad-request-error';
 async function listHotels(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) {
-    throw badRequestError();
+    //Must be NotFoudError [test] (using badRequest filter on frontEnd)
+    throw notFoundError();
   }
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket || ticket.status === 'RESERVED') {
@@ -39,7 +40,7 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
 
   const hotel = await hotelRepository.findRoomsByHotelId(hotelId);
 
-  if (!hotel) {
+  if (!hotel || hotel.Rooms.length === 0) {
     throw notFoundError();
   }
   const rooms = hotel.Rooms.map((room) => {

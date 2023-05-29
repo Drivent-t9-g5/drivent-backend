@@ -44,11 +44,14 @@ export function findTicketFailByEnrollmentIdReturn() {
 }
 
 export function getHotelsMock() {
-  const expect: Hotel[] = [
+  const expect = [
     {
       id: 1,
       name: 'Teste',
       image: 'teste image',
+      disponible: Number(),
+      rooms: [],
+      types: Number(),
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -75,5 +78,14 @@ export function getRoomsByHotelIdMock() {
       },
     ],
   };
+  /*
+  const expect = [
+    {
+      id: Number(),
+      available: Number(),
+      name: '',
+      reserved: Number(),
+    },
+  ];*/
   return expect;
 }

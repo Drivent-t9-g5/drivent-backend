@@ -6,7 +6,7 @@ import {
   getRoomsByHotelIdMock,
 } from '../factories';
 import hotelsService from '../../src/services/hotels-service';
-import { notFoundError } from '@/errors';
+import { notFoundError, unauthorizedError } from '@/errors';
 
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import { cannotListHotelsError } from '@/errors/cannot-list-hotels-error';
@@ -28,7 +28,7 @@ describe('listHotels function', () => {
     jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValue(enrollmentWithAddressReturn());
     jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId').mockResolvedValue(null);
 
-    await expect(hotelsService.listHotels(userId)).rejects.toEqual(cannotListHotelsError());
+    await expect(hotelsService.listHotels(userId)).rejects.toEqual(unauthorizedError());
   });
 
   it('should return cannot list hotels error with ticket status reserved', async () => {
@@ -37,7 +37,7 @@ describe('listHotels function', () => {
     jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValue(enrollmentWithAddressReturn());
     jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId').mockResolvedValue(findTicketFailByEnrollmentIdReturn());
 
-    await expect(hotelsService.listHotels(userId)).rejects.toEqual(cannotListHotelsError());
+    await expect(hotelsService.listHotels(userId)).rejects.toEqual(unauthorizedError());
   });
 
   it('should return cannot list hotels error with ticket type is remote', async () => {
@@ -46,7 +46,7 @@ describe('listHotels function', () => {
     jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValue(enrollmentWithAddressReturn());
     jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId').mockResolvedValue(findTicketFailByEnrollmentIdReturn());
 
-    await expect(hotelsService.listHotels(userId)).rejects.toEqual(cannotListHotelsError());
+    await expect(hotelsService.listHotels(userId)).rejects.toEqual(unauthorizedError());
   });
 
   it('should return cannot list hotels error with ticket type not includes hotel', async () => {
@@ -55,7 +55,7 @@ describe('listHotels function', () => {
     jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValue(enrollmentWithAddressReturn());
     jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId').mockResolvedValue(findTicketFailByEnrollmentIdReturn());
 
-    await expect(hotelsService.listHotels(userId)).rejects.toEqual(cannotListHotelsError());
+    await expect(hotelsService.listHotels(userId)).rejects.toEqual(unauthorizedError());
   });
 });
 
@@ -81,6 +81,14 @@ describe('getHotelsWithRooms function', () => {
     const userId = 1;
     const hotelId = 1;
     const hotel = getRoomsByHotelIdMock();
+    const promise = [
+      {
+        id: hotel.id,
+        available: 1,
+        name: hotel.name,
+        reserved: Number(),
+      },
+    ];
 
     jest.spyOn(hotelsService, 'listHotels').mockResolvedValue(null);
     jest.spyOn(enrollmentRepository, 'findWithAddressByUserId').mockResolvedValue(enrollmentWithAddressReturn());
@@ -90,7 +98,7 @@ describe('getHotelsWithRooms function', () => {
 
     const result = await hotelsService.getHotelsWithRooms(userId, hotelId);
 
-    expect(result).toEqual(hotel);
+    expect(result).toEqual(promise);
   });
 
   it('should not found hotel with room', async () => {

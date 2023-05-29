@@ -6,9 +6,8 @@ async function findFirst() {
   const cacheEvent = await redis.get(cacheKey);
 
   if (cacheEvent) {
-    console.log('cache');
     const event = JSON.parse(cacheEvent);
-    return event;
+    if (event) return event;
   }
   const event = await prisma.event.findFirst();
 
